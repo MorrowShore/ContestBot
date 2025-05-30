@@ -60,7 +60,7 @@ class ContestJobs:
         print(f"Contest ping role: {contest_ping_role}")
         if announcement_channel is not None:
             await announcement_channel.send(
-                f"{contest_ping_role.mention if contest_ping_role else ""}The submission channel is now open! Please submit your entries here: <#{submission_channel.id}>."
+                f"{contest_ping_role.mention if contest_ping_role else ''}The submission channel is now open! Please submit your entries here: <#{submission_channel.id}>.")
             )
         print("🔓 Opened submission channel at", datetime.utcnow())
 
