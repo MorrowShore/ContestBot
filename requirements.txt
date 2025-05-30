@@ -1,0 +1,21 @@
+discord.py
+
+#MongoDB
+motor
+
+#Image processing
+Pillow
+#For advanced resizing
+pyvips
+
+#Scheduling
+apscheduler
+
+# Date and Time Handling
+python-dateutil
+
+# Dotenv for environment variables
+python-dotenv
+
+# Files
+aiofiles
