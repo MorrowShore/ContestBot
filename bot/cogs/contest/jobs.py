@@ -6,8 +6,7 @@ import discord
 
 from bot import GMT_TIMEZONE
 from bot.cogs.contest.utils import get_submission_channel, get_contest_role, get_voting_channel, \
-    get_contest_announcement_channel, get_contest_ping_role, get_contest_archive_channel, get_discord_file_from_url, \
-    get_logs_channel
+    get_contest_announcement_channel, get_contest_ping_role, get_contest_archive_channel, get_discord_file_from_url
 
 
 class ContestJobs:
@@ -22,13 +21,13 @@ class ContestJobs:
         async for config in self.collection.find({}):
             guild_id = config["_id"]
 
-            scheduler.add_job(self.open_submission_channel, "cron", day=30, hour=14, minute=50, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.close_submission_channel, "cron", day=30, hour=14, minute=52, second = 0,  timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.post_submission_to_forum, "cron", day=30, hour=14, minute=58, second = 0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.open_voting_channel, "cron", day=30, hour=14, minute=58,second = 10, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.close_voting_channel, "cron", day=30, hour=14, minute=59, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.announce_winner, "cron", day=30, hour=14, minute=59, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.close_contest, "cron", day=30, hour=14, minute=59, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.open_submission_channel, "cron", day=1, hour=0, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.close_submission_channel, "cron", day=14, hour=23, minute=50, second = 0,  timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.post_submission_to_forum, "cron", day=14, hour=23, minute=59, second = 0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.open_voting_channel, "cron", day=16, hour=23, minute=59,second = 10, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.close_voting_channel, "cron", day=27, hour=23, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.announce_winner, "cron", day=28, hour=0, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.close_contest, "cron", day=28, hour=0, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
 
     async def open_submission_channel(self, guild_id: int = None):
         submission_channel = await get_submission_channel(self.bot, guild_id= guild_id)
