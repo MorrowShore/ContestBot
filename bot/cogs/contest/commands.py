@@ -1,16 +1,32 @@
 import discord
 from discord.ext import commands
 
+from bot.cogs.contest.utils import get_logs_channel
+from bot.core.error_embed import create_logs_embed
+
 
 class ContestCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.collection = self.bot.db["ServerConfig"]
 
+
     @commands.hybrid_command(name="contest_submission_channel", description="Select submission channel")
     @commands.has_permissions(administrator=True)
     async def contest_submission_channel(self, ctx: commands.Context, *, channel: discord.TextChannel = None):
         await ctx.defer()
+
+        logs_channel = await get_logs_channel(self.bot, guild_id=ctx.guild.id)
+        if logs_channel:
+            logs_embed = create_logs_embed(
+                title="Submission channel set",
+                description=f"Submission channel set to <#{channel.id}>" if channel else "Submission channel unset",
+                color=discord.Color.green() if channel else discord.Color.red()
+            )
+            await logs_channel.send(
+                embed=logs_embed
+            )
+
         if channel is None:
             channel = ctx.channel
 
@@ -21,6 +37,14 @@ class ContestCommands(commands.Cog):
                 upsert=True)
             await ctx.send(f"<#{channel.id}> is set as submission channel")
         except Exception as e:
+            if logs_channel:
+                await logs_channel.send(
+                    embed=create_logs_embed(
+                        title="Error setting submission channel",
+                        description=f"Error: {e}",
+                        color=discord.Color.red()
+                    )
+                )
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_voting_channel", description="Select voting channel")

@@ -10,6 +10,7 @@ from motor.motor_asyncio import AsyncIOMotorClient #type:ignore
 load_dotenv()
 
 
+
 # Environmental
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 MONGO_URI = os.getenv("MONGO_URI")

@@ -1,13 +1,16 @@
 import discord
-import datetime
 
 
-def create_error_embed(title: str = "Error Occurred", *, error_message: str) -> discord.Embed:
+def create_logs_embed(title: str = "Error Occurred", description: str = "", thumbnails=None, image=None, color: discord.Color = discord.Color.blue()) -> discord.Embed:
     embed = discord.Embed(
         title  = title,
-        description = error_message,
-        color = discord.Color.red(),
-        timestamp = datetime.datetime.utcnow()
+        description = description,
+        color =color,
+        timestamp = discord.utils.utcnow()
     )
-    embed.set_footer(text="Please contact support if the issue persists.")
+    embed.set_author(name="Contest Bot Logs")
+    if thumbnails:
+        embed.set_thumbnail(url=thumbnails)
+    if image:
+        embed.set_image(url=image)
     return embed
