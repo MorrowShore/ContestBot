@@ -19,7 +19,7 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-echo "Setting up bot directory at /home//..."
+echo "Setting up bot directory at /home/..."
 sudo mkdir -p /home/
 cd /home/
 
@@ -105,10 +105,11 @@ After=network.target
 Type=simple
 User=$USER
 WorkingDirectory=/home/contestbot
-ExecStart=/usr/bin/python3 $MAIN_PY_PATH
+ExecStart=/usr/bin/python3 -m pip --user $MAIN_PY_PATH
 Restart=always
 RestartSec=10
 Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONPATH=/home/$USER/.local/lib/python3.$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")/site-packages
 
 [Install]
 WantedBy=multi-user.target
