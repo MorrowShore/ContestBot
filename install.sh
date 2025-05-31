@@ -39,8 +39,12 @@ sudo chown -R $USER:$USER /home/contestbot
 cd ContestBot
 
 if [ ! -f ".env" ]; then
-    echo "Error: .env file not found in the bot directory."
-    exit 1
+    echo ".env file not found. Creating it..."
+    cat > .env << EOF
+DISCORD_TOKEN="1234"
+MONGO_URI="4321"
+EOF
+    echo ".env file created successfully!"
 fi
 
 echo ""
