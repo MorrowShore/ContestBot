@@ -52,9 +52,9 @@ fi
 
 echo ""
 echo "=== Environment Configuration ==="
-read -p "Enter your Discord bot token: " discord_token
+read -p "Enter your Discord token: " discord_token
 if [ -z "$discord_token" ]; then
-    echo "Error: Discord bot token cannot be empty."
+    echo "Error: Discord token cannot be empty."
     exit 1
 fi
 
@@ -89,7 +89,7 @@ if [ ! -f "$MAIN_PY_PATH" ]; then
     exit 1
 fi
 
-SERVICE_NAME="discord-contest-bot"
+SERVICE_NAME="contestbot"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 
 echo ""
@@ -151,5 +151,25 @@ fi
 
 echo ""
 echo "=== Setup Complete ==="
+
+echo "Checking if bot is running..."
+sleep 3 
+
+if pgrep -f "python3.*main.py" > /dev/null; then
+    echo "✅ Contest bot is running successfully!"
+    echo "Bot process found: PID $(pgrep -f 'python3.*main.py')"
+else
+    echo "❌ Warning: Bot process not detected!"
+    echo "Checking service status..."
+    sudo systemctl status "$SERVICE_NAME" --no-pager -l
+    echo ""
+    echo "Try these troubleshooting steps:"
+    echo "1. Check logs: sudo journalctl -u $SERVICE_NAME -f"
+    echo "2. Check .env file: cat /home/contestbot/.env"
+    echo "3. Test manually: cd /home/contestbot && python3 main.py"
+fi
+
+echo ""
+
 echo "Contest bot should now be running!"
 echo "If there's an issue, join Morrow Shore's Discord server here: https://discord.gg/2sbnwze753"
