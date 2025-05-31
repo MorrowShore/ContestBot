@@ -105,7 +105,7 @@ After=network.target
 Type=simple
 User=$USER
 WorkingDirectory=/home/contestbot
-ExecStart=/usr/bin/python3 -m pip --user $MAIN_PY_PATH
+ExecStart=/usr/bin/python3 $MAIN_PY_PATH
 Restart=always
 RestartSec=10
 Environment=PYTHONUNBUFFERED=1
