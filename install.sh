@@ -19,24 +19,24 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
-echo "Setting up bot directory at /home/contestbot/..."
-sudo mkdir -p /home/contestbot
-cd /home/contestbot
+echo "Setting up bot directory at /home//..."
+sudo mkdir -p /home/
+cd /home/
 
 echo "Downloading Discord bot from GitHub..."
-if [ -d "ContestBot" ]; then
-    echo "Directory 'ContestBot' already exists. Removing it..."
-    sudo rm -rf ContestBot
+if [ -d "contestbot" ]; then
+    echo "Directory 'contestbot' already exists. Removing it..."
+    sudo rm -rf contestbot
 fi
 
-sudo git clone https://github.com/MorrowShore/ContestBot.git
+sudo git clone https://github.com/MorrowShore/contestbot.git
 if [ $? -ne 0 ]; then
     echo "Error: Failed to clone the repository."
     exit 1
 fi
 
-sudo chown -R $USER:$USER /home/contestbot
-cd ContestBot
+sudo chown -R $USER:$USER /home/
+cd contestbot
 
 if [ ! -f ".env" ]; then
     echo ".env file not found. Creating it..."
@@ -83,7 +83,7 @@ else
     python3 -m pip install --upgrade pip discord.py pymongo python-dotenv
 fi
 
-MAIN_PY_PATH="/home/contestbot/ContestBot/main.py"
+MAIN_PY_PATH="/home/contestbot/main.py"
 if [ ! -f "$MAIN_PY_PATH" ]; then
     echo "Error: main.py not found in the bot directory."
     exit 1
@@ -104,7 +104,7 @@ After=network.target
 [Service]
 Type=simple
 User=$USER
-WorkingDirectory=/home/contestbot/ContestBot
+WorkingDirectory=/home/contestbot
 ExecStart=/usr/bin/python3 $MAIN_PY_PATH
 Restart=always
 RestartSec=10
@@ -138,11 +138,11 @@ else
     echo "Failed to create systemd service. Falling back to nohup method..."
     
     echo "Starting bot with nohup..."
-    cd /home/contestbot/ContestBot
+    cd /home/contestbot
     nohup python3 main.py > bot.log 2>&1 &
     BOT_PID=$!
     echo "Bot started with PID: $BOT_PID"
-    echo "Log file: /home/contestbot/ContestBot/bot.log"
+    echo "Log file: /home/contestbot/bot.log"
     echo "To stop the bot, run: kill $BOT_PID"
     
     echo $BOT_PID > bot.pid
