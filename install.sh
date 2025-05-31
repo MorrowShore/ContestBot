@@ -44,7 +44,10 @@ if [ ! -f ".env" ]; then
 DISCORD_TOKEN="1234"
 MONGO_URI="4321"
 EOF
+    echo ".env file created at: $(pwd)/.env"
     echo ".env file created successfully!"
+else
+    echo ".env file found at: $(pwd)/.env"
 fi
 
 echo ""
