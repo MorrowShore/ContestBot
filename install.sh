@@ -52,9 +52,9 @@ fi
 
 echo ""
 echo "=== Environment Configuration ==="
-read -p "Enter your Discord token: " discord_token
+read -p "Enter your Discord bot token: " discord_token
 if [ -z "$discord_token" ]; then
-    echo "Error: Discord token cannot be empty."
+    echo "Error: Discord bot token cannot be empty."
     exit 1
 fi
 
