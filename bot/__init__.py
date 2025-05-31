@@ -2,7 +2,7 @@ import os
 from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv #type: ignore
-from motor.motor_asyncio import AsyncIOMotorClient #type:ignore
+from motor.motor_asyncio import AsyncIOMotorClient #type: ignore
 
 
 

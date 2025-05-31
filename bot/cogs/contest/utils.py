@@ -4,7 +4,7 @@ import aiohttp
 import discord
 
 
-# def get_guild(cog):
+#     def get_guild(cog):
 #     return cog.bot.get_guild(GUILD_ID)
 
 async def get_submission_channel(bot, guild_id):

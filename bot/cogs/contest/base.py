@@ -38,7 +38,6 @@ class ContestManager(commands.Cog):
                 return logs_channel.send(embed=embed)
             return None
 
-        # Check: Submission channel is configured
         if not submission_channel:
             await log_to_logs_channel(
                 title="❌ Submission Channel Not Configured",
@@ -47,7 +46,6 @@ class ContestManager(commands.Cog):
             )
             return
 
-        # Check: Correct channel and has an image
         if message.channel.id != submission_channel.id:
             await log_to_logs_channel(
                 title="❌ Invalid Submission Location",
@@ -64,7 +62,6 @@ class ContestManager(commands.Cog):
             )
             return
 
-        # Store image
         current_month = datetime.now(GMT_TIMEZONE).strftime("%Y-%m")
         submissions = self.bot.db.submissions
         image_bytes = await attachment.read()
@@ -72,7 +69,7 @@ class ContestManager(commands.Cog):
         folder_path = f"bot/data/submissions/{guild_id}"
         os.makedirs(folder_path, exist_ok=True)
         output_path = os.path.join(folder_path, f"{user_id}.webp")
-        db_path = output_path.replace("\\", "/")  # Normalize
+        db_path = output_path.replace("\\", "/")
 
         try:
             await resize_and_save_image(image_bytes, output_path)
@@ -92,7 +89,6 @@ class ContestManager(commands.Cog):
             image=attachment.url
         )
 
-        # Replace previous month's submission if any
         await submissions.delete_many({
             "user_id": user_id,
             "guild_id": guild_id,

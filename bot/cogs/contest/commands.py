@@ -202,7 +202,6 @@ class ContestCommands(commands.Cog):
         bot_member = guild.me
         server_config = await self.collection.find_one({"_id": guild.id})
 
-        # Create base permission overwrites
         default_overwrites = {
             bot_member: discord.PermissionOverwrite(
                 view_channel=True,
@@ -226,7 +225,6 @@ class ContestCommands(commands.Cog):
             except discord.Forbidden:
                 print(f"Bot does not have permission to create category{discord.Forbidden}")
                 return
-            # ✅ Ensure bot has manage permission on the category
         try:
             await contest_category.set_permissions(
                 bot_member,
@@ -257,7 +255,6 @@ class ContestCommands(commands.Cog):
         async def get_or_create_role(name):
             return discord.utils.get(guild.roles, name=name) or await guild.create_role(name=name)
 
-        # Handle ping role
         ping_role = await get_or_create_role("Contest Ping")
 
         async def get_or_create_channel(name, cls, reason, is_news=False, extra_overwrite=None,
@@ -266,10 +263,8 @@ class ContestCommands(commands.Cog):
             if existing:
                 return existing
 
-            # Start with default overwrites
-            overwrites = {**default_overwrites}  # Safe copy
+            overwrites = {**default_overwrites}
 
-            # Safely add extra overwrites, skipping any roles above bot
             if extra_overwrite:
                 for role, perms in extra_overwrite.items():
                     if isinstance(role, discord.Role) and role.position >= guild.me.top_role.position:
@@ -277,7 +272,6 @@ class ContestCommands(commands.Cog):
                         continue
                     overwrites[role] = perms
 
-            # ✅ Ensure bot's permissions are applied last and preserved
             overwrites[bot_member] = discord.PermissionOverwrite(
                 view_channel=True,
                 manage_channels=True,
@@ -313,7 +307,6 @@ class ContestCommands(commands.Cog):
                     f"❌ Bot does not have permission to create {cls.__name__}: Missing permissions or role hierarchy issue.")
                 return None
 
-        # Create all needed channels
         submission_channel = await get_or_create_channel("contest-submit", discord.TextChannel, "Submission channel")
         voting_channel = await get_or_create_channel("contest-vote", discord.ForumChannel, "Voting channel",
                                                      inactivity_timeout=10080)
@@ -324,7 +317,6 @@ class ContestCommands(commands.Cog):
                                                               "Contest archive channel")
         logs_channel = await get_or_create_channel("bot-logs", discord.TextChannel, "Bot log channel")
 
-        # ✅ Reorder channels inside the category
         channels = [
             announcement_channel,
             voting_channel,
@@ -340,7 +332,6 @@ class ContestCommands(commands.Cog):
                 except Exception as e:
                     print(f"Error setting position for {channel.name}: {e}")
 
-        # Save everything to DB
         try:
             await self.collection.update_one(
                 {"_id": ctx.guild.id},

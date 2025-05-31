@@ -27,9 +27,9 @@ class ContestJobs:
             scheduler.add_job(self.close_submission_channel, "cron", day=14, hour=23, minute=0, second = 0,  timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
             scheduler.add_job(self.post_submission_to_forum, "cron", day=14, hour=23, minute=30, second = 0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
             scheduler.add_job(self.open_voting_channel, "cron", day=16, hour=23, minute=59,second = 0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.close_voting_channel, "cron", day=27, hour=23, minute=59, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.announce_winner, "cron", day=28, hour=0, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
-            scheduler.add_job(self.close_contest, "cron", day=28, hour=22, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.close_voting_channel, "cron", day=23, hour=23, minute=59, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.announce_winner, "cron", day=24, hour=0, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.close_contest, "cron", day=24, hour=22, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
 
     async def open_submission_channel(self, guild_id: int = None):
         submission_channel = await get_submission_channel(self.bot, guild_id= guild_id)
@@ -149,7 +149,7 @@ class ContestJobs:
         current_month = datetime.now(GMT_TIMEZONE).strftime("%Y-%m")
         submissions = self.submissions_collection.find({
             "month": current_month,
-            "guild_id": guild_id  # ✅ Only get submissions from this guild
+            "guild_id": guild_id  
         })
 
         member = await get_contest_role(self.bot, guild_id= guild_id)
@@ -170,7 +170,7 @@ class ContestJobs:
             if not user:
                 continue
 
-            file_path = os.path.normpath(entry["file_path"])  # ✅ convert / to OS-specific path
+            file_path = os.path.normpath(entry["file_path"])
 
             if not os.path.exists(file_path):
                 print(f"❌ File not found at {file_path}")
@@ -178,7 +178,6 @@ class ContestJobs:
 
             file = discord.File(file_path, filename="submission.webp")
 
-            # Create thread
             thread = await voting_channel.create_thread(
                 name=f"{user.display_name}'s Submission",
                 content=f" ",
@@ -195,7 +194,6 @@ class ContestJobs:
                     )
                 )
 
-            # React to the submission message
             try:
                 await thread.message.add_reaction("🏆")
             except Exception as e:
@@ -452,7 +450,6 @@ class ContestJobs:
             try:
                 if art_archive_channel is None:
                     continue
-                    # Fetch the first message in the thread (the submission)
 
                 user_data = await self.submissions_collection.find_one({"thread_id": thread.id})
                 user = guild.get_member(user_data["user_id"])
@@ -481,7 +478,6 @@ class ContestJobs:
                         else:
                             print(f"No guild folder found for {guild_id}")
 
-                    # Delete the thread after archiving
                 await thread.delete()
             except Exception as e:
                 if logs_channel:
