@@ -64,9 +64,19 @@ if [ -z "$mongo_uri" ]; then
     exit 1
 fi
 
+echo "Current .env content before changes:"
+echo "--------------------------------"
+cat .env
+echo "--------------------------------"
+
 echo "Updating .env file..."
-sed -i "s/DISCORD_TOKEN=\"1234\"/DISCORD_TOKEN=\"$discord_token\"|" .env
-sed -i "s/MONGO_URI=\"4321\"/MONGO_URI=\"$mongo_uri\"|" .env
+sed -i "s/^DISCORD_TOKEN=.*/DISCORD_TOKEN=\"$discord_token\"/" .env
+sed -i "s/^MONGO_URI=.*/MONGO_URI=\"$mongo_uri\"/" .env
+
+echo "Updated .env content:"
+echo "--------------------------------"
+cat .env
+echo "--------------------------------"
 
 echo ".env file updated successfully!"
 
