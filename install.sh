@@ -4,7 +4,6 @@ echo "=== Discord Bot Setup Script ==="
 
 echo "Updating system packages..."
 sudo apt update -y
-sudo apt upgrade -y
 
 echo "Installing required packages..."
 sudo apt install -y git python3 python3-pip python3-venv
@@ -66,16 +65,16 @@ fi
 
 echo "Current .env content before changes:"
 echo "--------------------------------"
-cat .env
+cat /home/contestbot/.env
 echo "--------------------------------"
 
 echo "Updating .env file..."
-sed -i "s/^DISCORD_TOKEN=.*/DISCORD_TOKEN=\"$discord_token\"/" .env
-sed -i "s/^MONGO_URI=.*/MONGO_URI=\"$mongo_uri\"/" .env
+sed -i "s|DISCORD_TOKEN=\"1234\"|DISCORD_TOKEN=\"$discord_token\"|" .env
+sed -i "s|MONGO_URI=\"4321\"|MONGO_URI=\"$mongo_uri\"|" .env
 
 echo "Updated .env content:"
 echo "--------------------------------"
-cat .env
+cat /home/contestbot/.env
 echo "--------------------------------"
 
 echo ".env file updated successfully!"
