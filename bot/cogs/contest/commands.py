@@ -251,28 +251,32 @@ class ContestCommands(commands.Cog):
 
         ping_role = await get_or_create_role("Contest Ping")
 
-        async def get_or_create_channel(name, cls, reason, is_news=False, extra_overwrite=None,
-                                        inactivity_timeout=None):
+        async def get_or_create_channel(name, cls, reason, extra_overwrite=None, inactivity_timeout=None):
             existing = discord.utils.get(guild.channels, name=name)
             if existing:
                 return existing
 
-            overwrites = {**default_overwrites}  # Safe copy
+            if not guild.me.guild_permissions.manage_channels:
+                print("Bot lacks Manage Channels permission")
+                return None
+
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(
+                    view_channel=False,
+                    send_messages=False
+                ),
+                bot_member: discord.PermissionOverwrite(
+                    view_channel=True,
+                    manage_channels=True,
+                    send_messages=True,
+                    manage_messages=True
+                )
+            }
 
             if extra_overwrite:
                 for role, perms in extra_overwrite.items():
-                    if isinstance(role, discord.Role) and role.position >= guild.me.top_role.position:
-                        print(f"⚠️ Skipping overwrite for {role.name} due to role hierarchy (bot role too low).")
-                        continue
-                    overwrites[role] = perms
-
-            overwrites[bot_member] = discord.PermissionOverwrite(
-                view_channel=True,
-                manage_channels=True,
-                send_messages=True,
-                manage_threads=True,
-                read_message_history=True
-            )
+                    if isinstance(role, discord.Role) and role.position < guild.me.top_role.position:
+                        overwrites[role] = perms
 
             try:
                 if cls == discord.TextChannel:
@@ -280,25 +284,23 @@ class ContestCommands(commands.Cog):
                         name,
                         category=contest_category,
                         reason=reason,
-                        overwrites=overwrites,
-                        news=is_news
+                        overwrites=overwrites
                     )
-
                 elif cls == discord.ForumChannel:
-                    kwargs = {
-                        "category": contest_category,
-                        "reason": reason,
-                        "default_layout": discord.ForumLayoutType.gallery_view,
-                        "overwrites": overwrites
-                    }
-                    if inactivity_timeout:
-                        kwargs["default_auto_archive_duration"] = inactivity_timeout
-                    return await guild.create_forum(name, **kwargs)
+                    return await guild.create_forum(
+                        name,
+                        category=contest_category,
+                        reason=reason,
+                        default_layout=discord.ForumLayoutType.gallery_view,
+                        default_auto_archive_duration=inactivity_timeout or 10080,
+                        overwrites=overwrites
+                    )
                 return None
-
-            except discord.Forbidden:
-                print(
-                    f"Bot does not have permission to create {cls.__name__}: Missing permissions or role hierarchy issue.")
+            except discord.Forbidden as e:
+                print(f"Channel creation failed: {e}")
+                return None
+            except Exception as e:
+                print(f"Unexpected error creating channel: {e}")
                 return None
 
         submission_channel = await get_or_create_channel("contest-submit", discord.TextChannel, "Submission channel")
