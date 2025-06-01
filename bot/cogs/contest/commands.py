@@ -194,23 +194,21 @@ class ContestCommands(commands.Cog):
         default_overwrites = {
             bot_member: discord.PermissionOverwrite(
                 view_channel=True,
-                manage_channels=True,
                 send_messages=True,
-                manage_threads=True,
                 read_message_history=True
             ),
             guild.default_role: discord.PermissionOverwrite(
                 view_channel=False,
-                send_messages=False,
-                create_public_threads=False,
-                create_private_threads=False
+                send_messages=False
             )
         }
 
         contest_category = discord.utils.get(guild.categories, name="Contest")
         if contest_category is None:
             try:
-                contest_category = await guild.create_category("Contest", overwrites=default_overwrites)
+                contest_category = await guild.create_category("Contest")
+                await contest_category.set_permissions(bot_member, overwrite=default_overwrites[bot_member])
+                await contest_category.set_permissions(guild.default_role, overwrite=default_overwrites[guild.default_role])
             except discord.Forbidden:
                 print(f"Bot does not have permission to create category{discord.Forbidden}")
                 return
@@ -254,7 +252,7 @@ class ContestCommands(commands.Cog):
             if existing:
                 return existing
 
-            overwrites = {**default_overwrites}  # Safe copy
+            overwrites = {**default_overwrites}
 
             if extra_overwrite:
                 for role, perms in extra_overwrite.items():
