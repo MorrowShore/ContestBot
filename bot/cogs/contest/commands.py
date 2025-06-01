@@ -12,7 +12,6 @@ class ContestCommands(commands.Cog):
 
 
     @commands.hybrid_command(name="contest_submission_channel", description="Select submission channel")
-    @commands.has_permissions(administrator=True)
     async def contest_submission_channel(self, ctx: commands.Context, *, channel: discord.TextChannel = None):
         await ctx.defer()
 
@@ -48,7 +47,6 @@ class ContestCommands(commands.Cog):
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_voting_channel", description="Select voting channel")
-    @commands.has_permissions(administrator=True)
     async def contest_voting_channel(self, ctx: commands.Context, *, channel: discord.ForumChannel = None):
         await ctx.defer()
         if channel is None:
@@ -72,7 +70,6 @@ class ContestCommands(commands.Cog):
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_role", description="Select contest role")
-    @commands.has_permissions(administrator=True)
     async def contest_role(self, ctx: commands.Context, *, role: discord.Role = None):
         await ctx.defer()
         if role is None:
@@ -110,7 +107,6 @@ class ContestCommands(commands.Cog):
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_announcement_channel", description="Select announcement channel")
-    @commands.has_permissions(administrator=True)
     async def contest_announcement_channel(self, ctx: commands.Context, *, channel: discord.TextChannel = None):
         await ctx.defer()
         if channel is None:
@@ -131,7 +127,6 @@ class ContestCommands(commands.Cog):
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_ping_role", description="Select contest ping role")
-    @commands.has_permissions(administrator=True)
     async def contest_ping_role(self, ctx: commands.Context, *, role: discord.Role = None):
         await ctx.defer()
         if role is None:
@@ -151,7 +146,6 @@ class ContestCommands(commands.Cog):
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_archive_channel", description="Select art archive channel")
-    @commands.has_permissions(administrator=True)
     async def contest_archive_channel(self, ctx: commands.Context, *, channel: discord.ForumChannel = None):
         await ctx.defer()
         if channel is None:
@@ -171,7 +165,6 @@ class ContestCommands(commands.Cog):
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_logs_channel", description="Select bot log channel")
-    @commands.has_permissions(administrator=True)
     async def contest_logs_channel(self, ctx: commands.Context, *, channel: discord.TextChannel = None):
         await ctx.defer()
         if channel is None:
@@ -191,7 +184,6 @@ class ContestCommands(commands.Cog):
             await ctx.send(f"Error: {e}")
 
     @commands.hybrid_command(name="contest_create_channel", description="Create contest channel")
-    @commands.has_permissions(administrator=True)
     async def contest_create_channel(self, ctx: commands.Context):
         await ctx.defer()
         guild = ctx.guild
@@ -313,8 +305,7 @@ class ContestCommands(commands.Cog):
         voting_channel = await get_or_create_channel("contest-vote", discord.ForumChannel, "Voting channel",
                                                      inactivity_timeout=10080)
         announcement_channel = await get_or_create_channel("contest-announcement", discord.TextChannel,
-                                                           "Announcement channel", extra_overwrite=view_only_overwrite,
-                                                           is_news=True)
+                                                           "Announcement channel", extra_overwrite=view_only_overwrite)
         contest_archive_channel = await get_or_create_channel("contest-archive", discord.ForumChannel,
                                                               "Contest archive channel")
         logs_channel = await get_or_create_channel("bot-logs", discord.TextChannel, "Bot log channel")
