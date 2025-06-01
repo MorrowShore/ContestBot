@@ -50,7 +50,6 @@ else
 fi
 
 echo ""
-echo "v0.9"
 echo ""
 echo "=== Environment Configuration ==="
 read -p "Enter your Discord token: " discord_token
