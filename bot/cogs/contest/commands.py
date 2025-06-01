@@ -304,21 +304,6 @@ class ContestCommands(commands.Cog):
                                                               "Contest archive channel")
         logs_channel = await get_or_create_channel("bot-logs", discord.TextChannel, "Bot log channel")
 
-        channels = [
-            announcement_channel,
-            voting_channel,
-            submission_channel,
-            contest_archive_channel,
-            logs_channel
-        ]
-
-        for index, channel in enumerate(channels):
-            if channel and channel.category_id == contest_category.id:
-                try:
-                    await channel.edit(position=index)
-                except Exception as e:
-                    print(f"Error setting position for {channel.name}: {e}")
-
         try:
             await self.collection.update_one(
                 {"_id": ctx.guild.id},
