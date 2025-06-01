@@ -233,9 +233,7 @@ class ContestCommands(commands.Cog):
             guild.default_role: discord.PermissionOverwrite(
                 view_channel=True,
                 read_message_history=True,
-                send_messages=False,
-                create_public_threads=False,
-                create_private_threads=False
+                send_messages=False
             )
         }
 
