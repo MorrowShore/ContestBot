@@ -60,6 +60,7 @@ bash <(curl -s https://raw.githubusercontent.com/MorrowShore/ContestBot/main/ins
 
 5- It'll ask for your bot token and the MongoDB connection string. Just paste em and you're done. 
 
+---
 
 To uninstall, run:
 ```bash
