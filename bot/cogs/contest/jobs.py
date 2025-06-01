@@ -23,7 +23,7 @@ class ContestJobs:
         async for config in self.collection.find({}):
             guild_id = config["_id"]
 
-            scheduler.add_job(self.open_submission_channel, "cron", day=1, hour=0, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
+            scheduler.add_job(self.open_submission_channel, "cron", day=2, hour=0, minute=0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
             scheduler.add_job(self.close_submission_channel, "cron", day=14, hour=23, minute=0, second = 0,  timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
             scheduler.add_job(self.post_submission_to_forum, "cron", day=14, hour=23, minute=30, second = 0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
             scheduler.add_job(self.open_voting_channel, "cron", day=16, hour=23, minute=59,second = 0, timezone=GMT_TIMEZONE, kwargs={"guild_id": guild_id})
